@@ -1,19 +1,31 @@
-import NextDocument, { Head, Main, NextScript } from 'next/document'
+import NextDocument, { Main, NextScript } from 'next/document'
+import { ServerStyleSheet } from 'styled-components'
+import Head from '../components/Head'
+import Theme from '../components/Theme'
 
 class Document extends NextDocument {
+  // This prevents FOUC while using styled-components
+  // https://github.com/zeit/next.js/tree/master/examples/with-styled-components
+  static getInitialProps ({ renderPage }) {
+    const sheet = new ServerStyleSheet()
+    const page = renderPage(App => props =>
+      sheet.collectStyles(<App {...props} />))
+
+    const styleTags = sheet.getStyleElement()
+
+    return { ...page, styleTags }
+  }
+
   render() {
     return (
       <html lang="en-US">
-        <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta charSet="utf-8" />
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500,700&display=swap" />
-          <title>Hiring Plan</title>
-        </Head>
+        <Head>{this.props.styleTags}</Head>
 
         <body>
-          <Main />
-          <NextScript />
+          <Theme>
+            <Main />
+            <NextScript />
+          </Theme>
         </body>
       </html>
     )
