@@ -1,8 +1,10 @@
 import styled from 'styled-components'
 
-const Name = styled.div``
+const Role = styled.div`
+  font-weight: bold;
+`
 
-const Role = styled.div``
+const Name = styled.div``
 
 const StyledMember = styled.div`
   padding: .2rem;
@@ -10,13 +12,14 @@ const StyledMember = styled.div`
   text-align: center;
   border: 1px solid rgba(0,0,0,.1);
   font-size: 1.3rem;
+  background: ${props => props.theme.colors.green};
 `
 
 const Member = ({ name, role, children }) => {
   return (
     <StyledMember>
-      <Name>{name}</Name>
       <Role>{role}</Role>
+      <Name>{name}</Name>
       {children}
     </StyledMember>
   )

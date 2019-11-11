@@ -38,7 +38,7 @@ const data = {
 
 const Home = (props) => {
   return (
-    <Organization>
+    <Organization data={data}>
       <Team name="Strategy">
         <Member name="Tim Apple" role ="Product Leader" />
         <Member name="Jane Doe" role ="Engineering Manager" />

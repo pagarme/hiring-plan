@@ -7,7 +7,8 @@ const Name = styled.div`
 `
 
 const StyledTeam = styled.div`
-  background: rgba(0,0,0,.1);
+  background: rgba(0,0,0,.05);
+  border: 1px solid rgba(0,0,0,.1);
   padding: 2rem;
   display: grid;
   grid-column: 1 / -1;
