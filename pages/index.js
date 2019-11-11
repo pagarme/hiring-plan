@@ -31,6 +31,22 @@ const data = {
           role: 'Tech Lead',
           name: 'Sarah Pearson',
         },
+        {
+          type: 'team',
+          name: 'Project I',
+          children: [
+            {
+              type: 'member',
+              role: 'Product Manager',
+              name: 'Steve Young',
+            },
+            {
+              type: 'member',
+              role: 'Tech Lead',
+              name: 'Sarah Pearson',
+            },
+          ],
+        },
       ],
     },
   ],
