@@ -1,4 +1,4 @@
-import NextApp, { Container } from 'next/app'
+import NextApp from 'next/app'
 import Theme from '../components/Theme'
 
 class App extends NextApp {
@@ -16,11 +16,9 @@ class App extends NextApp {
     const { Component, pageProps } = this.props
 
     return (
-      <Container>
-        <Theme>
-          <Component {...pageProps} />
-        </Theme>
-      </Container>
+      < Theme>
+        <Component {...pageProps} />
+      </Theme>
     )
   }
 }
