@@ -3,79 +3,87 @@ import Organization from '../components/Organization'
 import Member from '../components/Member'
 import Team from '../components/Team'
 
-const data = {
-  type: 'team',
-  name: 'Strategy I',
-  children: [
-    {
-      type: 'member',
-      role: 'Product Leader',
-      name: 'Tim Apple',
-    },
-    {
-      type: 'member',
-      role: 'Engineering Manager',
-      name: 'John Doe',
-    },
-    {
+import * as R from 'ramda'
+
+const HEADER_COLS = {
+  parentTeam: '1',
+  team: '2',
+  name: '3',
+  role: '4',
+}
+
+const structureEntriesByTeams = (entries) => {
+  const rootTeam = R.pipe(
+    R.find(R.propEq('parentTeam', '-')),
+    R.prop('team')
+  )(entries)
+
+  const teamEntryMap = R.groupBy(R.prop('team'), entries)
+
+  const buildTeamTree = team => {
+    const childTeams = R.pipe(
+      R.filter(R.propEq('parentTeam', team)),
+      R.map(R.prop('team')),
+      R.uniq
+    )(entries)
+
+    const members = R.pipe(
+      R.prop(team),
+      R.map(R.applySpec({
+        type: R.always('member'),
+        role: R.prop('role'),
+        name: R.prop('name')
+      }))
+    )(teamEntryMap)
+
+    return {
       type: 'team',
-      name: 'Product I',
+      name: team,
       children: [
-        {
-          type: 'member',
-          role: 'Product Manager',
-          name: 'Steve Young',
-        },
-        {
-          type: 'member',
-          role: 'Tech Lead',
-          name: 'Sarah Pearson',
-        },
-        {
-          type: 'team',
-          name: 'Project I',
-          children: [
-            {
-              type: 'member',
-              role: 'Product Manager',
-              name: 'Steve Young',
-            },
-            {
-              type: 'member',
-              role: 'Tech Lead',
-              name: 'Sarah Pearson',
-            },
-          ],
-        },
+        ...members,
+        ...childTeams.map(buildTeamTree)
       ],
-    },
-  ],
+    }
+    return teamEntryMap
+  }
+
+  return buildTeamTree(rootTeam)
+}
+
+const groupEntriesByRow = R.groupWith(R.eqBy(R.prop('row')))
+
+const findValueByCol = col => R.pipe(
+  R.find(R.propEq('col', col)),
+  R.prop('inputValue')
+)
+
+const transformEntry = R.applySpec({
+  parentTeam: findValueByCol(HEADER_COLS.parentTeam),
+  team: findValueByCol(HEADER_COLS.team),
+  name: findValueByCol(HEADER_COLS.name),
+  role: findValueByCol(HEADER_COLS.role),
+})
+
+const transformSpreadsheetData = (spreadsheetData) => {
+  const rawEntries = R.pipe(
+    R.path(['feed', 'entry']),
+    R.map(R.prop('gs$cell')),
+  )(spreadsheetData)
+
+  const entries = R.pipe(
+    groupEntriesByRow,
+    R.tail,
+    R.map(transformEntry)
+  )(rawEntries)
+
+  return structureEntriesByTeams(entries)
 }
 
 const Home = (props) => {
+  const data = transformSpreadsheetData(props.spreadsheetData)
+
   return (
     <Organization data={data}>
-      <Team name="Strategy">
-        <Member name="Tim Apple" role ="Product Leader" />
-        <Member name="Jane Doe" role ="Engineering Manager" />
-        <Member name="Tim Apple" role ="Product Leader" />
-
-        <Team name="Product I">
-          <Member name="Steve Young" role="Product Manager" />
-          <Member name="Sarah Morgan" role="Tech Lead" />
-
-          <Team name="Project I">
-            <Member name="Sadie Brown" role="Product Manager" />
-            <Member name="Arthur Lyn" role="Tech Lead" />
-            <Member name="Sadie Brown" role="Product Manager" />
-            <Member name="Arthur Lyn" role="Tech Lead" />
-            <Member name="Sadie Brown" role="Product Manager" />
-            <Member name="Arthur Lyn" role="Tech Lead" />
-            <Member name="Sadie Brown" role="Product Manager" />
-            <Member name="Arthur Lyn" role="Tech Lead" />
-          </Team>
-        </Team>
-      </Team>
     </Organization>
   )
 }
