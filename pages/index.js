@@ -10,6 +10,8 @@ const HEADER_COLS = {
   team: '2',
   name: '3',
   role: '4',
+  roleType: '5',
+  timeframe: '6'
 }
 
 const structureEntriesByTeams = (entries) => {
@@ -32,7 +34,9 @@ const structureEntriesByTeams = (entries) => {
       R.map(R.applySpec({
         type: R.always('member'),
         role: R.prop('role'),
-        name: R.prop('name')
+        name: R.prop('name'),
+        roleType: R.prop('roleType'),
+        timeframe: R.prop('timeframe'),
       }))
     )(teamEntryMap)
 
@@ -62,6 +66,8 @@ const transformEntry = R.applySpec({
   team: findValueByCol(HEADER_COLS.team),
   name: findValueByCol(HEADER_COLS.name),
   role: findValueByCol(HEADER_COLS.role),
+  roleType: findValueByCol(HEADER_COLS.roleType),
+  timeframe: findValueByCol(HEADER_COLS.timeframe),
 })
 
 const transformSpreadsheetData = (spreadsheetData) => {
