@@ -1,16 +1,34 @@
-import React from 'react'
+import fetch from 'isomorphic-fetch'
+import { useEffect } from 'react'
+import { useStore } from '../store'
 import { transformSpreadsheetData } from '../adapters/spreadsheet'
 import Organization from '../components/Organization'
-import Member from '../components/Member'
-import Team from '../components/Team'
 
 const Home = (props) => {
-  const data = transformSpreadsheetData(props.spreadsheetData)
+  const [state, dispatch] = useStore()
+
+  const data = state.data.length || props.data
+
+  useEffect(() => {
+    dispatch({ type: 'CHANGE_DATA', payload: props.data })
+  })
 
   return (
-    <Organization data={data}>
-    </Organization>
+    <div>
+      <Organization data={data} />
+    </div>
   )
 }
+
+Home.getInitialProps = async ({ query }) => {
+  const data = await fetch(query.source)
+    .then(res => res.json())
+    .then(transformSpreadsheetData)
+
+  return {
+    data,
+  }
+}
+
 
 export default Home

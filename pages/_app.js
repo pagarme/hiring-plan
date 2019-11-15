@@ -1,5 +1,5 @@
 import NextApp from 'next/app'
-import fetch from 'isomorphic-fetch'
+import Store from '../store'
 import Theme from '../components/Theme'
 import Head from '../components/Head'
 
@@ -9,10 +9,6 @@ class App extends NextApp {
       ? await Component.getInitialProps(ctx)
       : {}
 
-    const spreadsheetData = await fetch(ctx.query.source)
-      .then(res => res.json())
-
-    pageProps.spreadsheetData = spreadsheetData
     pageProps.query = ctx.query
 
     return { pageProps }
@@ -22,10 +18,12 @@ class App extends NextApp {
     const { Component, pageProps } = this.props
 
     return (
-      <Theme>
-        <Head />
-        <Component {...pageProps} />
-      </Theme>
+      <Store>
+        <Theme>
+          <Head />
+          <Component {...pageProps} />
+        </Theme>
+      </Store>
     )
   }
 }
