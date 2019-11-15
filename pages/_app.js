@@ -23,7 +23,7 @@ class App extends NextApp {
     const { Component, pageProps } = this.props
 
     return (
-      < Theme>
+      <Theme>
         <Component {...pageProps} />
       </Theme>
     )
