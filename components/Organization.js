@@ -10,6 +10,8 @@ const StyledOrganization = styled.div`
 
 const Organization = ({ data, children }) => {
   const render = (node) => {
+    const key = node.id || node.name
+
     const Component = node.type === 'team'
       ? Team
       : Member
@@ -18,13 +20,13 @@ const Organization = ({ data, children }) => {
 
     if (node.children) {
       return (
-        <Component key={node.name} {...componentProps}>
+        <Component key={key} {...componentProps}>
           {node.children.map(render)}
         </Component>
       )
     }
 
-    return <Component key={node.name} {...componentProps} />
+    return <Component key={key} {...componentProps} />
   }
 
   return (

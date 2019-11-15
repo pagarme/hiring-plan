@@ -15,6 +15,8 @@ import {
   uniq,
 } from 'ramda'
 
+import * as R from 'ramda'
+
 const HEADER_COLS = {
   parentTeam: '1',
   team: '2',
@@ -47,6 +49,7 @@ const structureEntriesByTeams = (entries) => {
         name: prop('name'),
         roleType: prop('roleType'),
         timeframe: prop('timeframe'),
+        id: prop('id'),
       }))
     )(teamEntryMap)
 
@@ -58,7 +61,6 @@ const structureEntriesByTeams = (entries) => {
         ...childTeams.map(buildTeamTree)
       ],
     }
-    return teamEntryMap
   }
 
   return buildTeamTree(rootTeam)
@@ -72,6 +74,7 @@ const findValueByCol = col => pipe(
 )
 
 const transformEntry = applySpec({
+  id: R.pipe(R.head, R.prop('row')),
   parentTeam: findValueByCol(HEADER_COLS.parentTeam),
   team: findValueByCol(HEADER_COLS.team),
   name: findValueByCol(HEADER_COLS.name),
