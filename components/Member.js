@@ -8,7 +8,6 @@ const Highlight = styled.div`
 const Text = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden;
 `
 
 const roleTypeColorMap = {

@@ -1,8 +1,7 @@
 import NextApp from 'next/app'
 import fetch from 'isomorphic-fetch'
 import Theme from '../components/Theme'
-
-const SPREADSHEET_URL = 'https://spreadsheets.google.com/feeds/cells/1F5PSFy5tjWltWVfI0RFmgRgHTn_lyED4Opo_28cIjm8/1/public/full?alt=json'
+import Head from '../components/Head'
 
 class App extends NextApp {
   static async getInitialProps ({ Component, ctx }) {
@@ -10,7 +9,7 @@ class App extends NextApp {
       ? await Component.getInitialProps(ctx)
       : {}
 
-    const spreadsheetData = await fetch(SPREADSHEET_URL)
+    const spreadsheetData = await fetch(ctx.query.source)
       .then(res => res.json())
 
     pageProps.spreadsheetData = spreadsheetData
@@ -24,6 +23,7 @@ class App extends NextApp {
 
     return (
       <Theme>
+        <Head />
         <Component {...pageProps} />
       </Theme>
     )
