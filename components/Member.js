@@ -44,7 +44,7 @@ const Member = (props) => {
   return (
     <StyledMember roleType={roleType} isEmpty={isEmpty}>
       <Highlight>{role}</Highlight>
-      <Text>{name}</Text>
+      <Text>{name} {isEmpty && `(${timeframe})`}</Text>
       {children}
     </StyledMember>
   )

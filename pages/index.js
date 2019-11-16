@@ -1,23 +1,35 @@
-import { useEffect } from 'react'
+import { reduce } from 'ramda'
 import Store from '../store'
 import fetch from 'isomorphic-fetch'
 import { transformSpreadsheetData } from '../adapters/spreadsheet'
 import HiringPlan from '../components/HiringPlan'
+import Filters from '../components/Filters'
 
-const Home = (props) => {
+const Index = (props) => {
+  const toFilter = reduce((acc, item) => ({
+    ...acc,
+    [item]: true,
+  }), {})
+
   const initialState = {
     data: props.data,
-    filters: {},
+    filters: {
+      teams: toFilter(props.data.teams),
+      timeframes: toFilter(props.data.timeframes),
+      roleTypes: toFilter(props.data.roleTypes),
+      roles: toFilter(props.data.roles),
+    },
   }
 
   return (
     <Store initialState={initialState}>
+      <Filters />
       <HiringPlan />
     </Store>
   )
 }
 
-Home.getInitialProps = async ({ query }) => {
+Index.getInitialProps = async ({ query }) => {
   const data = await fetch(query.source)
     .then(res => res.json())
     .then(transformSpreadsheetData)
@@ -27,4 +39,4 @@ Home.getInitialProps = async ({ query }) => {
   }
 }
 
-export default Home
+export default Index

@@ -5,13 +5,13 @@ import Member from './Member'
 import Team from './Team'
 
 const StyledHiringPlan = styled.div`
-  margin: 2rem;
+  margin-top: 2rem;
   display: grid;
 `
 
 const HiringPlan = ({ children }) => {
   const [state, dispatch] = useStore()
-  const data = state.data
+  const { organogram } = state.data
 
   const renderTree = (node) => {
     const key = node.id || node.name
@@ -34,7 +34,7 @@ const HiringPlan = ({ children }) => {
   }
 
   return (
-    <StyledHiringPlan>{renderTree(data)}</StyledHiringPlan>
+    <StyledHiringPlan>{renderTree(organogram)}</StyledHiringPlan>
   )
 }
 

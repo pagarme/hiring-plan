@@ -6,11 +6,14 @@ import {
   find,
   groupBy,
   groupWith,
+  invoker,
   map,
   path,
   pipe,
+  pluck,
   prop,
   propEq,
+  sort,
   tail,
   uniq,
 } from 'ramda'
@@ -26,7 +29,7 @@ const HEADER_COLS = {
   timeframe: '6'
 }
 
-const structureEntriesByTeams = (entries) => {
+const buildOrganogram = (entries) => {
   const rootTeam = pipe(
     find(propEq('parentTeam', '-')),
     prop('team')
@@ -84,16 +87,26 @@ const transformEntry = applySpec({
 })
 
 export const transformSpreadsheetData = (spreadsheetData) => {
-  const rawEntries = pipe(
+  const entries = pipe(
     path(['feed', 'entry']),
     map(prop('gs$cell')),
-  )(spreadsheetData)
-
-  const entries = pipe(
     groupEntriesByRow,
     tail,
     map(transformEntry)
-  )(rawEntries)
+  )(spreadsheetData)
 
-  return structureEntriesByTeams(entries)
+  const pickUniq = prop => pipe(
+    pluck(prop),
+    uniq,
+    invoker(0, 'sort')
+  )(entries)
+
+  return {
+    rawData: entries,
+    teams: pickUniq('team'),
+    timeframes: pickUniq('timeframe'),
+    roles: pickUniq('role'),
+    roleTypes: pickUniq('roleType'),
+    organogram: buildOrganogram(entries),
+  }
 }

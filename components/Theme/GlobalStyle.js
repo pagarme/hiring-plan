@@ -15,6 +15,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    margin: 2rem;
     font-size: ${theme.global.font.size};
     font-family: ${theme.global.font.family};
   }
