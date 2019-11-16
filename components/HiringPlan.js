@@ -1,15 +1,19 @@
 import styled from 'styled-components'
 import { omit } from 'ramda'
+import { useStore } from '../store'
 import Member from './Member'
 import Team from './Team'
 
-const StyledOrganization = styled.div`
+const StyledHiringPlan = styled.div`
   margin: 2rem;
   display: grid;
 `
 
-const Organization = ({ data, children }) => {
-  const render = (node) => {
+const HiringPlan = ({ children }) => {
+  const [state, dispatch] = useStore()
+  const data = state.data
+
+  const renderTree = (node) => {
     const key = node.id || node.name
 
     const Component = node.type === 'team'
@@ -21,7 +25,7 @@ const Organization = ({ data, children }) => {
     if (node.children) {
       return (
         <Component key={key} {...componentProps}>
-          {node.children.map(render)}
+          {node.children.map(renderTree)}
         </Component>
       )
     }
@@ -30,8 +34,8 @@ const Organization = ({ data, children }) => {
   }
 
   return (
-    <StyledOrganization>{render(data)}</StyledOrganization>
+    <StyledHiringPlan>{renderTree(data)}</StyledHiringPlan>
   )
 }
 
-export default Organization
+export default HiringPlan

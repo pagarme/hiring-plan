@@ -1,23 +1,19 @@
 import { useEffect } from 'react'
-import { useStore } from '../store'
+import Store from '../store'
 import fetch from 'isomorphic-fetch'
 import { transformSpreadsheetData } from '../adapters/spreadsheet'
-import Organization from '../components/Organization'
+import HiringPlan from '../components/HiringPlan'
 
 const Home = (props) => {
-  const [_, dispatch] = useStore()
-
-  useEffect(() => {
-    dispatch({
-      type: 'CHANGE_DATA',
-      payload: props.data,
-    })
-  }, [props.data])
+  const initialState = {
+    data: props.data,
+    filters: {},
+  }
 
   return (
-    <div>
-      <Organization data={props.data} />
-    </div>
+    <Store initialState={initialState}>
+      <HiringPlan />
+    </Store>
   )
 }
 

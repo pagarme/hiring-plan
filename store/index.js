@@ -15,12 +15,7 @@ const StateProvider = ({ reducer, initialState, children }) => (
 
 export const useStore = () => useContext(StateContext)
 
-const Store = ({ children }) => {
-  const initialState = {
-    data: {},
-    filters: {},
-  }
-  
+const Store = ({ children, initialState = {} }) => {
   return (
     <StateProvider initialState={initialState} reducer={mainReducer}>
       {children}

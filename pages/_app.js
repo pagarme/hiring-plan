@@ -1,5 +1,4 @@
 import NextApp from 'next/app'
-import Store from '../store'
 import Theme from '../components/Theme'
 import Head from '../components/Head'
 
@@ -18,12 +17,10 @@ class App extends NextApp {
     const { Component, pageProps } = this.props
 
     return (
-      <Store>
-        <Theme>
-          <Head />
-          <Component {...pageProps} />
-        </Theme>
-      </Store>
+      <Theme>
+        <Head />
+        <Component {...pageProps} />
+      </Theme>
     )
   }
 }
