@@ -1,7 +1,10 @@
 import {
+  assoc,
   filter,
   keys,
+  map,
   mapObjIndexed,
+  not,
   pickBy,
   pipe,
   prop,
@@ -9,7 +12,7 @@ import {
 } from 'ramda'
 import { buildOrganogramFromEntries } from '../adapters/spreadsheet';
 
-const filterEntries = (filters, entries) => {
+const updateEntriesVisibility = (filters, entries) => {
   const isActive = (val) => val === true
 
   const pickActiveFilters = pipe(
@@ -19,13 +22,17 @@ const filterEntries = (filters, entries) => {
 
   const activeFilters = mapObjIndexed(pickActiveFilters, filters)
 
-  return filter(entry => {
-    return pipe(
+  return map((entry) => {
+    const shouldHideEntry = pipe(
       keys,
-      reduce((shouldKeep, filterKey) => {
-        return shouldKeep && activeFilters[filterKey].includes(prop(filterKey, entry))
-      }, true)
+      reduce((shouldBeVisible, filterKey) => {
+        return shouldBeVisible 
+          && activeFilters[filterKey].includes(prop(filterKey, entry))
+      }, true),
+      not
     )(activeFilters)
+
+    return assoc('isHidden', shouldHideEntry, entry)
   })(entries)
 }
 
@@ -42,8 +49,8 @@ export const mainReducer = (state, action) => {
         [key]: newFilterState,
       }
 
-      const activeEntries = filterEntries(newFilters, entries)
-      const organogram = buildOrganogramFromEntries(activeEntries)
+      const newEntries = updateEntriesVisibility(newFilters, entries)
+      const organogram = buildOrganogramFromEntries(newEntries)
 
       return {
         ...state,

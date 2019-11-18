@@ -13,6 +13,8 @@ const HiringPlan = ({ children }) => {
   const [state, dispatch] = useStore()
   const { organogram } = state
 
+  console.log(organogram)
+
   const renderTree = (node) => {
     const key = node.id || node.name
 

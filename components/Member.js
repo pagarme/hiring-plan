@@ -36,12 +36,13 @@ const Member = (props) => {
     role,
     roleType,
     timeframe,
+    isHidden,
     children,
   } = props
 
   const isEmpty = name === 'Vaga'
 
-  return (
+  return !isHidden && (
     <StyledMember roleType={roleType} isEmpty={isEmpty}>
       <Highlight>{role}</Highlight>
       <Text>{name} {isEmpty && `(${timeframe})`}</Text>

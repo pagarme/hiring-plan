@@ -47,12 +47,13 @@ export const buildOrganogramFromEntries = (entries) => {
       prop(team),
       defaultTo([]),
       map(applySpec({
+        id: prop('id'),
         type: always('member'),
+        isHidden: prop('isHidden'),
         role: prop('role'),
         name: prop('name'),
         roleType: prop('roleType'),
         timeframe: prop('timeframe'),
-        id: prop('id'),
       }))
     )(teamEntryMap)
 
