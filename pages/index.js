@@ -1,28 +1,17 @@
 import { reduce } from 'ramda'
 import Store from '../store'
 import fetch from 'isomorphic-fetch'
-import { transformSpreadsheetData } from '../adapters/spreadsheet'
 import HiringPlan from '../components/HiringPlan'
 import Filters from '../components/Filters'
+import { 
+  parseSpreadsheetData, 
+  buildOrganogramFromEntries, 
+  getMetadataFromEntries,
+} from '../adapters/spreadsheet'
 
 const Index = (props) => {
-  const toFilter = reduce((acc, item) => ({
-    ...acc,
-    [item]: true,
-  }), {})
-
-  const initialState = {
-    data: props.data,
-    filters: {
-      teams: toFilter(props.data.teams),
-      timeframes: toFilter(props.data.timeframes),
-      roleTypes: toFilter(props.data.roleTypes),
-      roles: toFilter(props.data.roles),
-    },
-  }
-
   return (
-    <Store initialState={initialState}>
+    <Store initialState={props.data}>
       <Filters />
       <HiringPlan />
     </Store>
@@ -30,12 +19,30 @@ const Index = (props) => {
 }
 
 Index.getInitialProps = async ({ query }) => {
-  const data = await fetch(query.source)
+  const toFilter = reduce((acc, item) => ({
+    ...acc,
+    [item]: true,
+  }), {})
+
+  const entries = await fetch(query.source)
     .then(res => res.json())
-    .then(transformSpreadsheetData)
+    .then(parseSpreadsheetData)
+
+  const organogram = buildOrganogramFromEntries(entries)
+  const { roleTypes, roles, timeframes } = getMetadataFromEntries(entries)
+
+  const filters = {
+    roleType: toFilter(roleTypes),
+    role: toFilter(roles),
+    timeframe: toFilter(timeframes),
+  }
 
   return {
-    data,
+    data: {
+      entries,
+      organogram,
+      filters,
+    },
   }
 }
 

@@ -15,24 +15,26 @@ const StyledFilterList = styled.fieldset`
 `
 
 const FilterList = (props) => {
-  const [options, toggleOptions] = useState(props.options)
+  const filters = props.filters
 
   const handleCheckboxChange = event => {
-    toggleOptions({ 
-      ...options,
-      [event.target.name]: event.target.checked 
-    })
+    const newFilters = {
+      ...filters,
+      [event.target.name]: event.target.checked,
+    }
+
+    props.onChange(newFilters)
   }
 
   return (
     <StyledFilterList>
       <legend>{props.name}</legend>
 
-      {Object.keys(options).map((key) => (
+      {Object.keys(filters).map((key) => (
         <Checkbox
           name={key}
           key={key}
-          checked={options[key]}
+          checked={filters[key]}
           onChange={handleCheckboxChange}
         />
       ))}
@@ -49,11 +51,21 @@ const FilterContainer = styled.div`
 const Filters = () => {
   const [state, dispatch] = useStore()
 
+  const handleChange = key => (filters) => {
+    dispatch({
+      type: 'CHANGE_FILTER',
+      payload: {
+        key,
+        newFilterState: filters,
+      },
+    })
+  }
+
   return (
     <FilterContainer>
-      <FilterList name="Types" options={state.filters.roleTypes} />
-      <FilterList name="Roles" options={state.filters.roles} />
-      <FilterList name="Timeframes" options={state.filters.timeframes} />
+      <FilterList name="Types" onChange={handleChange('roleType')} filters={state.filters.roleType} />
+      <FilterList name="Roles" onChange={handleChange('role')} filters={state.filters.role} />
+      <FilterList name="Timeframes" onChange={handleChange('timeframe')} filters={state.filters.timeframe} />
     </FilterContainer>
   )
 }

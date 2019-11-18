@@ -11,7 +11,7 @@ const StyledHiringPlan = styled.div`
 
 const HiringPlan = ({ children }) => {
   const [state, dispatch] = useStore()
-  const { organogram } = state.data
+  const { organogram } = state
 
   const renderTree = (node) => {
     const key = node.id || node.name

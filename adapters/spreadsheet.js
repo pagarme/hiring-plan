@@ -1,11 +1,13 @@
 import {
   always,
   applySpec,
+  defaultTo,
   eqBy,
   filter,
   find,
   groupBy,
   groupWith,
+  head,
   invoker,
   map,
   path,
@@ -13,12 +15,9 @@ import {
   pluck,
   prop,
   propEq,
-  sort,
   tail,
   uniq,
 } from 'ramda'
-
-import * as R from 'ramda'
 
 const HEADER_COLS = {
   parentTeam: '1',
@@ -29,7 +28,7 @@ const HEADER_COLS = {
   timeframe: '6'
 }
 
-const buildOrganogram = (entries) => {
+export const buildOrganogramFromEntries = (entries) => {
   const rootTeam = pipe(
     find(propEq('parentTeam', '-')),
     prop('team')
@@ -46,6 +45,7 @@ const buildOrganogram = (entries) => {
 
     const members = pipe(
       prop(team),
+      defaultTo([]),
       map(applySpec({
         type: always('member'),
         role: prop('role'),
@@ -77,7 +77,7 @@ const findValueByCol = col => pipe(
 )
 
 const transformEntry = applySpec({
-  id: R.pipe(R.head, R.prop('row')),
+  id: pipe(head, prop('row')),
   parentTeam: findValueByCol(HEADER_COLS.parentTeam),
   team: findValueByCol(HEADER_COLS.team),
   name: findValueByCol(HEADER_COLS.name),
@@ -86,15 +86,7 @@ const transformEntry = applySpec({
   timeframe: findValueByCol(HEADER_COLS.timeframe),
 })
 
-export const transformSpreadsheetData = (spreadsheetData) => {
-  const entries = pipe(
-    path(['feed', 'entry']),
-    map(prop('gs$cell')),
-    groupEntriesByRow,
-    tail,
-    map(transformEntry)
-  )(spreadsheetData)
-
+export const getMetadataFromEntries = (entries) => {
   const pickUniq = prop => pipe(
     pluck(prop),
     uniq,
@@ -102,11 +94,17 @@ export const transformSpreadsheetData = (spreadsheetData) => {
   )(entries)
 
   return {
-    rawData: entries,
     teams: pickUniq('team'),
     timeframes: pickUniq('timeframe'),
     roles: pickUniq('role'),
     roleTypes: pickUniq('roleType'),
-    organogram: buildOrganogram(entries),
   }
 }
+
+export const parseSpreadsheetData = pipe(
+  path(['feed', 'entry']),
+  map(prop('gs$cell')),
+  groupEntriesByRow,
+  tail,
+  map(transformEntry)
+ )
