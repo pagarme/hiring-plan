@@ -1,7 +1,6 @@
 import styled from 'styled-components'
-import { Fragment, useState } from 'react'
 import { useStore } from '../store'
-import Checkbox from '../components/Checkbox'
+import Checkbox from './Checkbox'
 
 const StyledFilterList = styled.fieldset`
   display: grid;
@@ -15,9 +14,9 @@ const StyledFilterList = styled.fieldset`
 `
 
 const FilterList = (props) => {
-  const filters = props.filters
+  const { filters } = props
 
-  const handleCheckboxChange = event => {
+  const handleCheckboxChange = (event) => {
     const newFilters = {
       ...filters,
       [event.target.name]: event.target.checked,
@@ -30,7 +29,7 @@ const FilterList = (props) => {
     <StyledFilterList>
       <legend>{props.name}</legend>
 
-      {Object.keys(filters).map((key) => (
+      {Object.keys(filters).map(key => (
         <Checkbox
           name={key}
           key={key}

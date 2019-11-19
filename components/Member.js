@@ -11,9 +11,9 @@ const Text = styled.div`
 `
 
 const roleTypeColorMap = {
-  'Engineering': 'yellow',
-  'Product': 'salmon',
-  'Design': 'red',
+  Engineering: 'yellow',
+  Product: 'salmon',
+  Design: 'red',
 }
 
 const StyledMember = styled.div`
@@ -22,9 +22,9 @@ const StyledMember = styled.div`
   text-align: center;
   border: 1px solid rgba(0,0,0,.2);
   font-size: 1.3rem;
-  
+
   background: ${(props) => {
-    if (props.isEmpty) return props.theme.colors['green']
+    if (props.isEmpty) return props.theme.colors.green
 
     return props.theme.colors[propOr('gray', props.roleType, roleTypeColorMap)]
   }};

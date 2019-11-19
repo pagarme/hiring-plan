@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "deploy": "npm run build && now",
+    "lint": "eslint './**/*.js'",
     "start": "next start"
   },
   "dependencies": {
@@ -19,6 +20,11 @@
     "styled-components": "^4.4.1"
   },
   "devDependencies": {
-    "babel-plugin-styled-components": "^1.10.6"
+    "babel-plugin-styled-components": "^1.10.6",
+    "eslint": "^6.6.0",
+    "eslint-config-pagarme-base": "^3.0.0",
+    "eslint-config-pagarme-react": "^3.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-react": "^7.16.0"
   }
 }

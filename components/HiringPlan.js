@@ -9,11 +9,9 @@ const StyledHiringPlan = styled.div`
   display: grid;
 `
 
-const HiringPlan = ({ children }) => {
-  const [state, dispatch] = useStore()
+const HiringPlan = () => {
+  const [state] = useStore()
   const { organogram } = state
-
-  console.log(organogram)
 
   const renderTree = (node) => {
     const key = node.id || node.name

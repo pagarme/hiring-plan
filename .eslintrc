@@ -1,0 +1,21 @@
+{
+  "extends": ["pagarme-base", "plugin:react/recommended"],
+  "plugins": ["react"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+    "max-params": "off",
+    "import/prefer-default-export": "off",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off"
+  }
+}

@@ -25,7 +25,7 @@ const HEADER_COLS = {
   name: '3',
   role: '4',
   roleType: '5',
-  timeframe: '6'
+  timeframe: '6',
 }
 
 export const buildOrganogramFromEntries = (entries) => {
@@ -36,7 +36,7 @@ export const buildOrganogramFromEntries = (entries) => {
 
   const teamEntryMap = groupBy(prop('team'), entries)
 
-  const buildTeamTree = team => {
+  const buildTeamTree = (team) => {
     const childTeams = pipe(
       filter(propEq('parentTeam', team)),
       map(prop('team')),
@@ -62,7 +62,7 @@ export const buildOrganogramFromEntries = (entries) => {
       name: team,
       children: [
         ...members,
-        ...childTeams.map(buildTeamTree)
+        ...childTeams.map(buildTeamTree),
       ],
     }
   }
@@ -88,8 +88,8 @@ const transformEntry = applySpec({
 })
 
 export const getMetadataFromEntries = (entries) => {
-  const pickUniq = prop => pipe(
-    pluck(prop),
+  const pickUniq = key => pipe(
+    pluck(key),
     uniq,
     invoker(0, 'sort')
   )(entries)
@@ -108,4 +108,4 @@ export const parseSpreadsheetData = pipe(
   groupEntriesByRow,
   tail,
   map(transformEntry)
- )
+)

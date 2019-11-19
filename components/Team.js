@@ -17,13 +17,11 @@ const StyledTeam = styled.div`
   grid-auto-flow: row;
 `
 
-const Team = ({ name, children }) => {
-  return (
-    <StyledTeam>
-      <Name>{name}</Name>
-      {children}
-    </StyledTeam>
-  )
-}
+const Team = ({ name, children }) => (
+  <StyledTeam>
+    <Name>{name}</Name>
+    {children}
+  </StyledTeam>
+)
 
 export default Team

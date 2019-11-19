@@ -1,22 +1,20 @@
 import { reduce } from 'ramda'
-import Store from '../store'
 import fetch from 'isomorphic-fetch'
+import Store from '../store'
 import HiringPlan from '../components/HiringPlan'
 import Filters from '../components/Filters'
-import { 
-  parseSpreadsheetData, 
-  buildOrganogramFromEntries, 
+import {
+  parseSpreadsheetData,
+  buildOrganogramFromEntries,
   getMetadataFromEntries,
 } from '../adapters/spreadsheet'
 
-const Index = (props) => {
-  return (
-    <Store initialState={props.data}>
-      <Filters />
-      <HiringPlan />
-    </Store>
-  )
-}
+const Index = props => (
+  <Store initialState={props.data}>
+    <Filters />
+    <HiringPlan />
+  </Store>
+)
 
 Index.getInitialProps = async ({ query }) => {
   const toFilter = reduce((acc, item) => ({
