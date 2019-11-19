@@ -29,7 +29,7 @@ Index.getInitialProps = async ({ query }) => {
   const organogram = buildOrganogramFromEntries(entries)
   const { roleTypes, roles, timeframes } = getMetadataFromEntries(entries)
 
-  const filters = {
+  var filters = {
     roleType: toFilter(roleTypes),
     role: toFilter(roles),
     timeframe: toFilter(timeframes),
@@ -40,8 +40,8 @@ Index.getInitialProps = async ({ query }) => {
       entries,
       organogram,
       filters,
-    },
+    }
   }
 }
 
-export default Index
+export default Index;
